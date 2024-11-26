@@ -1,1 +1,1 @@
-# recipe-project
+# Recipe Rating Prediction Based on Meat Inclusion
