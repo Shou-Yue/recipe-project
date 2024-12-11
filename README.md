@@ -205,7 +205,9 @@ We run the permutation test by shuffling the missingness of `rating` 1000 times.
     width="800"
     height="600"
     frameborder="0"
-></iframe>We found p=0.112>0.01, we fail to reject the null hypothesis. So we conclude that `rating` is not **MAR** depending on `minutes`.
+></iframe>
+
+We found p=0.112>0.01, we fail to reject the null hypothesis. So we conclude that `rating` is not **MAR** depending on `minutes`.
 
 ## Hypothesis Testing
 
