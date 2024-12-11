@@ -167,7 +167,7 @@ Finally, we think `rating` may be **MAR** depending on other columns, which we e
 Since we are trying to predict `rating`, we want to access the missingness dependency of `rating`.
 First, we decide to test if `rating` is missing conditionally on `n_steps`, the number of steps to make the recipe, and `minutes`, the number of minutes it takes to make the recipe.
 
-#### n-steps and rating
+> n-steps and rating
 
 We suspect that when people complete dishes that takes too many steps to make they might not give a rating.
 
@@ -190,7 +190,7 @@ We run the permutation test by shuffling the missingness of rating 1000 times. T
 
 We found p=0.0<0.01, so we reject the null hypothesis. We then conclude that `rating` is indeed **MAR** conditional on `n_steps`.
 
-#### minutes and rating
+> minutes and rating
 
 We suspect that dishes that takes too many minutes to make may lead to users to not give a rating.
 
@@ -210,7 +210,6 @@ We run the permutation test by shuffling the missingness of `rating` 1000 times.
     height="600"
     frameborder="0"
 ></iframe>
-
 We found p=0.112>0.01, we fail to reject the null hypothesis. So we conclude that `rating` is not **MAR** depending on `minutes`.
 
 ## Hypothesis Testing
