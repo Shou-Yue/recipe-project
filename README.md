@@ -79,47 +79,52 @@ When cleaning the data, we used the following steps:
 
 3. Replace `0` in `rating` with `np.NaN`.
    - Since valid `rating` is an integer from 1 being the lowest to 5 being the highest. Then `0` is then representing missing values. So we replace `0` with `np.NaN` to avoid bias in future analysis
-4. Add column `avg_rating` containing the avegrage rating fot the recipe in that row.
+4. Convert the `date` and `submitted` column from `str` to `pd.DateTime`.
+5. Convert the `nutritions`, `ingredients`, `tags` column from `str` to `list`.
+6. Drop the row where `user_id` is `NaN`. That recipe has no review.
+7. Add column `avg_rating` containing the avegrage rating fot the recipe in that row.
    - Since a recipe gets many reviews, we want to know its average rating.
 
 ### Result
 
 The final df contains the following columns:
 
-| **#** | **Column**       | **Dtype** |
-| ----- | ---------------- | --------- |
-| 0     | `name`           | object    |
-| 1     | `id`             | int64     |
-| 2     | `minutes`        | int64     |
-| 3     | `contributor_id` | int64     |
-| 4     | `submitted`      | object    |
-| 5     | `tags`           | object    |
-| 6     | `nutrition`      | object    |
-| 7     | `n_steps`        | int64     |
-| 8     | `steps`          | object    |
-| 9     | `description`    | object    |
-| 10    | `ingredients`    | object    |
-| 11    | `n_ingredients`  | int64     |
-| 12    | `user_id`        | float64   |
-| 13    | `recipe_id`      | float64   |
-| 14    | `date`           | object    |
-| 15    | `rating`         | float64   |
-| 16    | `review`         | object    |
+| **Column**       | **Dtype**      |
+| ---------------- | -------------- |
+| `name`           | object         |
+| `id`             | int64          |
+| `minutes`        | int64          |
+| `contributor_id` | int64          |
+| `submitted`      | datetime64[ns] |
+| `tags`           | object         |
+| `nutrition`      | object         |
+| `n_steps`        | int64          |
+| `steps`          | object         |
+| `description`    | object         |
+| `ingredients`    | object         |
+| `n_ingredients`  | int64          |
+| `user_id`        | float64        |
+| `recipe_id`      | float64        |
+| `date`           | datetime64[ns] |
+| `rating`         | float64        |
+| `review`         | object         |
+| `avg_rating`     | float64        |
 
 Shown below is part of the cleaned table with some of the most relevant columns:
 
-| **name**                           | **id** | **minutes** | **contributor_id** | **submitted** | **n_steps** | **n_ingredients** | **user_id** | **recipe_id** | **date**   | **rating** | **avg_rating** |
-| ---------------------------------- | ------ | ----------- | ------------------ | ------------- | ----------- | ----------------- | ----------- | ------------- | ---------- | ---------- | -------------- |
-| 1 brownies in the world best ever  | 333281 | 40          | 985201             | 2008-10-27    | 10          | 9                 | 386585      | 333281        | 2008-11-19 | 4          | 4              |
-| 1 in canada chocolate chip cookies | 453467 | 45          | 1848091            | 2011-04-11    | 12          | 11                | 424680      | 453467        | 2012-01-26 | 5          | 5              |
-| 412 broccoli casserole             | 306168 | 40          | 50969              | 2008-05-30    | 6           | 9                 | 29782       | 306168        | 2008-12-31 | 5          | 5              |
-| 412 broccoli casserole             | 306168 | 40          | 50969              | 2008-05-30    | 6           | 9                 | 1.19628e+06 | 306168        | 2009-04-13 | 5          | 5              |
-| 412 broccoli casserole             | 306168 | 40          | 50969              | 2008-05-30    | 6           | 9                 | 768828      | 306168        | 2013-08-02 | 5          | 5              |
+| name                               |     id | minutes | contributor_id | submitted           | n_steps | n_ingredients |     user_id | recipe_id | date                | rating | avg_rating |
+| :--------------------------------- | -----: | ------: | -------------: | :------------------ | ------: | ------------: | ----------: | --------: | :------------------ | -----: | ---------: |
+| 1 brownies in the world best ever  | 333281 |      40 |         985201 | 2008-10-27 00:00:00 |      10 |             9 |      386585 |    333281 | 2008-11-19 00:00:00 |      4 |          4 |
+| 1 in canada chocolate chip cookies | 453467 |      45 |        1848091 | 2011-04-11 00:00:00 |      12 |            11 |      424680 |    453467 | 2012-01-26 00:00:00 |      5 |          5 |
+| 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 00:00:00 |       6 |             9 |       29782 |    306168 | 2008-12-31 00:00:00 |      5 |          5 |
+| 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 00:00:00 |       6 |             9 | 1.19628e+06 |    306168 | 2009-04-13 00:00:00 |      5 |          5 |
+| 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 00:00:00 |       6 |             9 |      768828 |    306168 | 2013-08-02 00:00:00 |      5 |          5 |
 
 ### Univariate Analysis
 
 First, we want to explore the distribution of `rating`. We want to see if `rating` is biased. If people only rate if they have a strong opinion. Then the histogram will be skewed.
 We discovered that `rating` is significantly skewed to the left, in fact, the number of 5-star ratings is more than the rest of the ratings combined. We may consider that `rating` might be biased because most people coming back to review only when they like the recipe a lot.
+
 <iframe
     src = "assets/univariate_1.html"
     width = "800"
@@ -131,6 +136,7 @@ We discovered that `rating` is significantly skewed to the left, in fact, the nu
 ### Bivariate Analysis
 
 We try to explore if there is a relationship between **Inclusion of the Meat Tag in Tags** and **Average Rating**. We use create-kde from lecture. And we found that **the dish having meat doesn't seem to affect its rating**.
+
 <iframe
     src = "assets/bivariate_1.html"
     width = "800"
@@ -158,7 +164,7 @@ The three columns in the cleaned dataframe that have non-trivial number missing 
 ### NMAR Analysis
 
 We think none of the three columns are **NMAR**.
-We can argue that `description` is **MAR** (missing by design) depending on `contributor_id`, if a recipe is submitted by a frequent creator then it's more
+We can argue that `description` is **MAR** depending on `contributor_id`, if a recipe is submitted by a frequent creator then it's more
 We can also argue that `review` is **MAR** dependent on `rating`, because if a person either feel too positive or too negative about the recipe might not give a review.
 Finally, we think `rating` may be **MAR** depending on other columns, which we examine below.
 
@@ -180,6 +186,7 @@ We suspect that when people complete dishes that takes too many steps to make th
 **Significance Level**: 0.01
 
 We run the permutation test by shuffling the missingness of rating 1000 times. The distribution of test statistic and the observed statistic are shown below.
+
 <iframe
     src = "assets/mar_n_steps.html"
     width = "800"
@@ -203,6 +210,7 @@ We suspect that dishes that takes too many minutes to make may lead to users to 
 **Significance Level**: 0.01
 
 We run the permutation test by shuffling the missingness of `rating` 1000 times. The distribution of test statistic and the observed statistic are shown below.
+
 <iframe
     src="assets/mar_minutes.html"
     width="800"
