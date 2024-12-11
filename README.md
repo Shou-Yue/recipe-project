@@ -125,6 +125,7 @@ We discovered that `rating` is significantly skewed to the left, in fact, the nu
     width = "800"
     height = "600"
     frameborder = "0"
+    style="margin: 0; padding: 0; display: block;"
 ></iframe>
 
 ### Bivariate Analysis
@@ -135,6 +136,7 @@ We try to explore if there is a relationship between **Inclusion of the Meat Tag
     width = "800"
     height = "600"
     frameborder = "0"
+    style="margin: 0; padding: 0; display: block;"
 ></iframe>
 
 ### Interesting Aggregates
@@ -183,6 +185,7 @@ We run the permutation test by shuffling the missingness of rating 1000 times. T
     width = "800"
     height = "600"
     frameborder = "0"
+    style="margin: 0; padding: 0; display: block;"
 ></iframe>
 
 We found p=0.0<0.01, so we reject the null hypothesis. We then conclude that `rating` is indeed **MAR** conditional on `n_steps`.
@@ -205,6 +208,7 @@ We run the permutation test by shuffling the missingness of `rating` 1000 times.
     width="800"
     height="600"
     frameborder="0"
+    style="margin: 0; padding: 0; display: block;"
 ></iframe>
 
 We found p=0.112>0.01, we fail to reject the null hypothesis. So we conclude that `rating` is not **MAR** depending on `minutes`.
