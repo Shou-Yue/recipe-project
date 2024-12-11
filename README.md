@@ -82,13 +82,13 @@ When cleaning the data, we used the following steps:
 
 Shown below is part of the cleaned table with some of the most relevant columns
 
-| name                               |     id | minutes | contributor_id | submitted  | n_steps | n_ingredients |     user_id | recipe_id | date       | rating | avg_rating |
-| :--------------------------------- | -----: | ------: | -------------: | :--------- | ------: | ------------: | ----------: | --------: | :--------- | -----: | ---------: |
-| 1 brownies in the world best ever  | 333281 |      40 |         985201 | 2008-10-27 |      10 |             9 |      386585 |    333281 | 2008-11-19 |      4 |          4 |
-| 1 in canada chocolate chip cookies | 453467 |      45 |        1848091 | 2011-04-11 |      12 |            11 |      424680 |    453467 | 2012-01-26 |      5 |          5 |
-| 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 |       6 |             9 |       29782 |    306168 | 2008-12-31 |      5 |          5 |
-| 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 |       6 |             9 | 1.19628e+06 |    306168 | 2009-04-13 |      5 |          5 |
-| 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 |       6 |             9 |      768828 |    306168 | 2013-08-02 |      5 |          5 |
+| **name**                           | **id** | **minutes** | **contributor_id** | **submitted** | **n_steps** | **n_ingredients** | **user_id** | **recipe_id** | **date**   | **rating** | **avg_rating** |
+| ---------------------------------- | ------ | ----------- | ------------------ | ------------- | ----------- | ----------------- | ----------- | ------------- | ---------- | ---------- | -------------- |
+| 1 brownies in the world best ever  | 333281 | 40          | 985201             | 2008-10-27    | 10          | 9                 | 386585      | 333281        | 2008-11-19 | 4          | 4              |
+| 1 in canada chocolate chip cookies | 453467 | 45          | 1848091            | 2011-04-11    | 12          | 11                | 424680      | 453467        | 2012-01-26 | 5          | 5              |
+| 412 broccoli casserole             | 306168 | 40          | 50969              | 2008-05-30    | 6           | 9                 | 29782       | 306168        | 2008-12-31 | 5          | 5              |
+| 412 broccoli casserole             | 306168 | 40          | 50969              | 2008-05-30    | 6           | 9                 | 1.19628e+06 | 306168        | 2009-04-13 | 5          | 5              |
+| 412 broccoli casserole             | 306168 | 40          | 50969              | 2008-05-30    | 6           | 9                 | 768828      | 306168        | 2013-08-02 | 5          | 5              |
 
 ### Univariate Analysis
 
@@ -96,9 +96,9 @@ First, we want to explore the distribution of `rating`. We want to see if `ratin
 We discovered that `rating` is significantly skewed to the left, in fact, the number of 5-star ratings is more than the rest of the ratings combined. We may consider that `rating` might be biased because most people coming back to review only when they like the recipe a lot.
 
 <iframe
-    src = "assets/univariate_1.html",
-    width = "800",
-    height = "600",
+    src = "assets/univariate_1.html"
+    width = "800"
+    height = "600"
     frameborder = "0"
 ></iframe>
 
@@ -107,9 +107,9 @@ We discovered that `rating` is significantly skewed to the left, in fact, the nu
 We try to explore if there is a relationship between **Inclusion of the Meat Tag in Tags** and **Average Rating**. We use create-kde from lecture. And we found that **the dish having meat doesn't seem to affect its rating**.
 
 <iframe
-    src = "assets/bivariate_1.html",
-    width = "800",
-    height = "600",
+    src = "assets/bivariate_1.html"
+    width = "800"
+    height = "600"
     frameborder = "0"
 ></iframe>
 
@@ -151,18 +151,18 @@ We suspect that when people complete dishes that takes too many steps to make th
 
 **Test Statistic**: the difference in mean of `n_steps` when `rating` is missing and when `rating` is present.
 
-**Significance Level**: $0.01$
+**Significance Level**: 0.01
 
 We run the permutation test by shuffling the missingness of rating 1000 times. The distribution of test statistic and the observed statistic are shown below.
 
 <iframe
     src = "assets/mar_n_steps.html",
-    width = "800",
-    height = "600",
+    width = "800"
+    height = "600"
     frameborder = "0"
 ></iframe>
 
-We found $p=0.0<0.01$, so we reject the null hypothesis. We then conclude that `rating` is indeed **MAR** conditional on `n_steps`.
+We found p=0.0<0.01, so we reject the null hypothesis. We then conclude that `rating` is indeed **MAR** conditional on `n_steps`.
 
 #### minutes and rating
 
@@ -180,12 +180,12 @@ We run the permutation test by shuffling the missingness of `rating` 1000 times.
 
 <iframe
     src="assets/mar_minutes.html"
-    width="800",
-    height="600",
+    width="800"
+    height="600"
     frameborder="0"
 ></iframe>
 
-We found $p=0.112>0.01$, we fail to reject the null hypothesis. So we conclude that `rating` is not **MAR** depending on `minutes`.
+We found p=0.112>0.01, we fail to reject the null hypothesis. So we conclude that `rating` is not **MAR** depending on `minutes`.
 
 ## Hypothesis Testing
 
@@ -199,10 +199,12 @@ To investigate this question, we run a **permutaiton test** where we shuffled a 
 
 **Test Statistic:** Difference in mean between ratings of non-meat dishes and meat dishes
 
-We run a $10000$-simulation permutaiton test in order to get the empirical distribution of the test statistics under the null hypothesis.
+We run a 10000-simulation permutaiton test in order to get the empirical distribution of the test statistics under the null hypothesis.
 
-We then get $p=0.0<0.05$, so we reject the null hypothesis. We conclude that people rate dishes with meat in their tag lower than dishes without meat in their tag.
+We then get p=0.0<0.05, so we reject the null hypothesis. We conclude that people rate dishes with meat in their tag lower than dishes without meat in their tag.
 
 ## Baseline Model
+
 ## Final Model
+
 ## Fairness Analysis
