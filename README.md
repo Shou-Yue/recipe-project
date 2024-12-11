@@ -82,7 +82,7 @@ When cleaning the data, we used the following steps:
 4. Convert the `date` and `submitted` column from `str` to `pd.DateTime`.
 5. Convert the `nutritions`, `ingredients`, `tags` column from `str` to `list`.
 6. Drop the row where `user_id` is `NaN`. That recipe has no review.
-7. Add column `avg_rating` containing the avegrage rating fot the recipe in that row.
+7. Add column `avg_rating` containing the avegrage rating for the recipe in that row.
    - Since a recipe gets many reviews, we want to know its average rating.
 
 ### Result
