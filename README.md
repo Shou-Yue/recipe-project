@@ -117,7 +117,7 @@ Shown below is part of the cleaned table with some of the most relevant columns:
 | 1 brownies in the world best ever  | 333281 |      40 |         985201 | 2008-10-27 00:00:00 |      10 |             9 |      386585 |    333281 | 2008-11-19 00:00:00 |      4 |          4 |
 | 1 in canada chocolate chip cookies | 453467 |      45 |        1848091 | 2011-04-11 00:00:00 |      12 |            11 |      424680 |    453467 | 2012-01-26 00:00:00 |      5 |          5 |
 | 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 00:00:00 |       6 |             9 |       29782 |    306168 | 2008-12-31 00:00:00 |      5 |          5 |
-| 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 00:00:00 |       6 |             9 | 1.19628e+06 |    306168 | 2009-04-13 00:00:00 |      5 |          5 |
+| 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 00:00:00 |       6 |             9 |     1196280 |    306168 | 2009-04-13 00:00:00 |      5 |          5 |
 | 412 broccoli casserole             | 306168 |      40 |          50969 | 2008-05-30 00:00:00 |       6 |             9 |      768828 |    306168 | 2013-08-02 00:00:00 |      5 |          5 |
 
 ### Univariate Analysis
@@ -239,8 +239,58 @@ We then get p=0.0<0.05, so we reject the null hypothesis. We conclude that peopl
 
 ## Framing a Predicition
 
+After reviewing our results from above, we intend to **Predict Rating of a Recipe**, a multi-class classification problem, as ratings can take values of any integer from 1-5, which would make rating an catagorical, ordinal variable.
+
+We chose `rating` as our response variable as it is the single statistic that users will prioritize when looking through recipes online. Additionally, most previous analysis were done with `rating` as one of the variables, thus, we have the most information at the time regarding which columns will affect `rating`, making it an appropriate variable to predict.
+
+Because we previously analyzed `minutes` and `is_meat` and concluded that they had significant corrolation with the `ratings` column, we will use these columns to create features for our baseline model in the following section.
+
+To evaluate our model's effectiveness, we will be reporting both the model's accuracy, as well as the model's f1 score. 
+1. **Accuracy:** The accuracy will allow us to analyze overall how our model is doing in terms of creating predictions based on given parameters, in this case being `minute` and `is_meat`
+2. **F1-Score:** Although accuracy will be a direct and effective measure of the effectiveness of our model, it does not allow insights into important aspects of the model, such as fairness for each groups in our data, as well as analyze if our model is creating excessive false positive/negative predictions.
+
 ## Baseline Model
+
+In our baseline model, we utilized a **Random Forest Classifier** with two parameters that we transfromed and process according to the process below:
+1. `minutes`: The minutes column, which, as mentioned before contains the time necessary to create the recipe, this is a continuous, numerical variable in our dataframe. Thus, to accurately determine the effects this has on rating, we used `StandardScaler()` to standardize the data, allowing us to interpret if the specific row has above, below, or about average time consumed.
+2. `is_meat`: As seen previously, people are likely to rate meat and non-meat tagged dishes differently, thus making this nominal, true/false variable effective when predicting rating. We kept all values in their according groups, and transformed booleans into integers with 1 corresponding to `True` and 0 responding to `False`.
+
+We did not tune any hyperparameters and used the default arguments for the Random Forest Classifier, but we did split our data into a training set, containing 80% of the data, and a test set, containing 20% of the data, allowing us to analyze if our model is over/underfitting the data. This was accomplished by utilizing `train_test_split` from the sklearn library.
+
+The statistics produced by our baseline model is as follows:
+- **Accuracy:** `0.776`
+- **F1-Score - Averaged:** `0.175`
+- **F1-Score - By Category:** `0.  , 0.  , 0.  , 0.  , 0.87`
+
+Strangely, the accuracy came out rather high at almost 0.78, meaning that our baseline model classifies around 80% of recipes effectively, but the f1 score was extremely low at 0.17, taking a glance at each f1 score for different columns, it can be seen that the model was much more effective at predicting recipes with ratings of 5, and rather low for everythin else.
+
+To analyze why, we generated the list of unique values from our prediction, and found that our models only outputted either 4 or 5 for any given recipe, this is likely due to the uneven distribution of points in the dataset. After analyzing, we saw that almost 95% of all data had ratings of either 4 or 5. We will address this in the final model.
+
+At the time being, our model is not very useful, it has a high accracy, but it is not much better than a constant model that always outputs 5 for the prediction. To make it more effective, we need to classify recipes with lower ratings better.
 
 ## Final Model
 
+In our final model, we included many more parameters, and utilized **GridSearchCV** to find optimal hyperparameters for our model. The list of features and how they were treated is as follows:
+1. `date` and `submitted`: These were columns containing datetime objects, we used these parameters in consideration that users interpretation of recipes might vary as time goes on, people today likely do not have the same preferences for food now compared to a few years ago. Or perhaps they rated seaonal dishes differently based on time of year, such as the tendency to enjoy ice-cream in summer rather than winter.
+   - To account for these differences, we defined a function to extract year, month, day, and day of the week, and standardized them.
+2. `description` and `review`: These columns contained the description of the recipe, and the written review from ysers, both of which are text columns, we will combine these columns and use TfIdf in order to find words that corrolate with higher/lower ratings.
+3. `ingredients`: This contains a list of strings containing ingredients for the recipe, and similarly to before, we will use TfIdf to find ingredients that are likely to be corrolated with higher/lower ratings
+4. `nutrition`: This column contains a list corresponding to the nutritional value in the recipe, however, unlike before we cannot treat them as a collective, as entry in a specific cell of the nutritional value of the recipe is a different category, as a result, this is a multi-label categorical feature, we used `MultiLabelBinizer` in order to create bins for each of these values, and interpreted how each value affected rating.
+5. `is_meat` and `minutes`: Because these were used in our baseline model, and proved relatively effective in predicting the rating, we treat them the same way as before, and include them in our model.
+6. `n_steps` and `n_ingredients`: These columns contained the number of steps, and the number of ingredients in the recipe, accordingly. As these go up, complexity of the recipe will also increaase, likely having a negative effect on rating. We simply applied standardscaler to these categories.
+
+Additionally to adding these parameters, we utilized the argument class_weight = `balanced` in our `RandomForestClassifier`. This will allow us to account for the uneven distribution that was seen in our previous model.
+
+Finally, we will run a GridSearch on our model to find optimal hyperparameters, recursively searching the number of estimators, the max depth, and the minimum split arguments. Which turned out to be 20, 5, and 200 respectively.
+
+In our final model, our statistics were as follows:
+- **Accuracy:** `0.754`
+- **F1-Score - Averaged:** `0.329`
+
+Comparing with our baseline model, it can be seen that the model of our accuracy had not improved at all, and infact had gone down a little, but our f1 score had almost doubled.
+
+This means that our fixed model was able to predict reviews with lower rating more accuratly than before at the cost of creating some false classification in groups with 4 or 5 as the rating, most likely due to the inclusion of the argument `balanced = True` when creating our pipeline.
+
 ## Fairness Analysis
+
+
