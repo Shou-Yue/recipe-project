@@ -293,4 +293,21 @@ This means that our fixed model was able to predict reviews with lower rating mo
 
 ## Fairness Analysis
 
+For our fairness analysis, we revisit the idea of **meat** inclusion in the tags of each recipe. We will split the recipes into two groups, ones with **meat** in the tag, and the other without. We can use this as the portion of meat-tagged recipes is high enough in our dataset as shown below.
+- count of `is_meat == False`: 155771
+- count of `is_meat == True`: 41534
+This high count means that any patterns exhibited by our model when predicting this group is likely accurate and not due to chance alone.
 
+Additionally, since we had 5 categories that ratings can be, integers from 1-5, we will treat these values and classify them into a binary column for which precision/recall values will have more significant meaning. This column will contain 1 for recipes with 4 or 5 as the rating, and 0 for recipes with 1-3 and will be named `highly_rated`.
+
+Currently, the f1 score of our model uses the `macro` setting, which represents the mean f1 score of each label individually, thus, evaluating precision/recall parity using this metric will give similar results as evaluating accuracy parity as having a false positive in one category means having a false negative in another. 
+
+We will be using precision parity to measure model fairness, as we believe that having false positives, low rated recipes being classified as high, will disappoint a user more. As they are likely to be unsatisfied with the recipe after putting time and effort into making it, rather than seeing a good recipe falsely classified and ignoring it.
+
+To predict if our model is fair for recipes with/without meat, we conduct a permutation test using the hypothesis pair below:
+1. **Null Hypothesis:** Our model is fair, and its precision is the same for recipes with or without `meat` being contained in the tag.
+2. **Alternative Hypothesis:** Our model is unfair, and its precision is higher for recipes with `meat` being contained in the tag.
+3. **Test Statistic:** Difference in precision between rows with `is_meat == True` and `is_meat == False`
+4. **Significance Level:** 0.01
+
+After running the permutation test through randomly shuffling the `is_meat` column, we get a p-value of 0.117, since this is greater than our set significance level at 0.01, we do not reject the null hypothesis, and we conclude that our model is fair in the sense that creates similar predicted precision for `meat` and `non-meat` dishes.
