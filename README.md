@@ -120,7 +120,6 @@ Shown below is part of the cleaned table with some of the most relevant columns:
 
 First, we want to explore the distribution of `rating`. We want to see if `rating` is biased. If people only rate if they have a strong opinion. Then the histogram will be skewed.
 We discovered that `rating` is significantly skewed to the left, in fact, the number of 5-star ratings is more than the rest of the ratings combined. We may consider that `rating` might be biased because most people coming back to review only when they like the recipe a lot.
-
 <iframe
     src = "assets/univariate_1.html"
     width = "800"
@@ -131,7 +130,6 @@ We discovered that `rating` is significantly skewed to the left, in fact, the nu
 ### Bivariate Analysis
 
 We try to explore if there is a relationship between **Inclusion of the Meat Tag in Tags** and **Average Rating**. We use create-kde from lecture. And we found that **the dish having meat doesn't seem to affect its rating**.
-
 <iframe
     src = "assets/bivariate_1.html"
     width = "800"
@@ -180,7 +178,6 @@ We suspect that when people complete dishes that takes too many steps to make th
 **Significance Level**: 0.01
 
 We run the permutation test by shuffling the missingness of rating 1000 times. The distribution of test statistic and the observed statistic are shown below.
-
 <iframe
     src = "assets/mar_n_steps.html"
     width = "800"
@@ -203,14 +200,12 @@ We suspect that dishes that takes too many minutes to make may lead to users to 
 **Significance Level**: 0.01
 
 We run the permutation test by shuffling the missingness of `rating` 1000 times. The distribution of test statistic and the observed statistic are shown below.
-
 <iframe
     src="assets/mar_minutes.html"
     width="800"
     height="600"
     frameborder="0"
-></iframe>
-We found p=0.112>0.01, we fail to reject the null hypothesis. So we conclude that `rating` is not **MAR** depending on `minutes`.
+></iframe>We found p=0.112>0.01, we fail to reject the null hypothesis. So we conclude that `rating` is not **MAR** depending on `minutes`.
 
 ## Hypothesis Testing
 
@@ -227,6 +222,8 @@ To investigate this question, we run a **permutaiton test** where we shuffled a 
 We run a 10000-simulation permutaiton test in order to get the empirical distribution of the test statistics under the null hypothesis.
 
 We then get p=0.0<0.05, so we reject the null hypothesis. We conclude that people rate dishes with meat in their tag lower than dishes without meat in their tag.
+
+## Framing a Predicition
 
 ## Baseline Model
 
