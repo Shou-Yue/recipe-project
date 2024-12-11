@@ -53,26 +53,30 @@ The second dataset, `interactions`, contains 731927 rows and 5 columns, each row
 When cleaning the data, we used the following steps:
 
 1. Left merge `recipe` and `interactions`, drop the one row in `recipe` where name is `NaN`.
+
 2. Check the data type for resulting columns:
-   | **#** | **Column** | **Dtype** |
-   |-------|--------------------|------------|
-   | 0 | `name` | object |
-   | 1 | `id` | int64 |
-   | 2 | `minutes` | int64 |
-   | 3 | `contributor_id` | int64 |
-   | 4 | `submitted` | object |
-   | 5 | `tags` | object |
-   | 6 | `nutrition` | object |
-   | 7 | `n_steps` | int64 |
-   | 8 | `steps` | object |
-   | 9 | `description` | object |
-   | 10 | `ingredients` | object |
-   | 11 | `n_ingredients` | int64 |
-   | 12 | `user_id` | float64 |
-   | 13 | `recipe_id` | float64 |
-   | 14 | `date` | object |
-   | 15 | `rating` | float64 |
-   | 16 | `review` | object |
+
+   - This step allows us to evaluate following cleaning operations
+   - | **Column**       | **Dtype** |
+     | ---------------- | --------- |
+     | `name`           | object    |
+     | `id`             | int64     |
+     | `minutes`        | int64     |
+     | `contributor_id` | int64     |
+     | `submitted`      | object    |
+     | `tags`           | object    |
+     | `nutrition`      | object    |
+     | `n_steps`        | int64     |
+     | `steps`          | object    |
+     | `description`    | object    |
+     | `ingredients`    | object    |
+     | `n_ingredients`  | int64     |
+     | `user_id`        | float64   |
+     | `recipe_id`      | float64   |
+     | `date`           | object    |
+     | `rating`         | float64   |
+     | `review`         | object    |
+
 3. Replace `0` in `rating` with `np.NaN`.
    - Since valid `rating` is an integer from 1 being the lowest to 5 being the highest. Then `0` is then representing missing values. So we replace `0` with `np.NaN` to avoid bias in future analysis
 4. Add column `avg_rating` containing the avegrage rating fot the recipe in that row.
@@ -80,7 +84,29 @@ When cleaning the data, we used the following steps:
 
 ### Result
 
-Shown below is part of the cleaned table with some of the most relevant columns
+The final df contains the following columns:
+
+| **#** | **Column**       | **Dtype** |
+| ----- | ---------------- | --------- |
+| 0     | `name`           | object    |
+| 1     | `id`             | int64     |
+| 2     | `minutes`        | int64     |
+| 3     | `contributor_id` | int64     |
+| 4     | `submitted`      | object    |
+| 5     | `tags`           | object    |
+| 6     | `nutrition`      | object    |
+| 7     | `n_steps`        | int64     |
+| 8     | `steps`          | object    |
+| 9     | `description`    | object    |
+| 10    | `ingredients`    | object    |
+| 11    | `n_ingredients`  | int64     |
+| 12    | `user_id`        | float64   |
+| 13    | `recipe_id`      | float64   |
+| 14    | `date`           | object    |
+| 15    | `rating`         | float64   |
+| 16    | `review`         | object    |
+
+Shown below is part of the cleaned table with some of the most relevant columns:
 
 | **name**                           | **id** | **minutes** | **contributor_id** | **submitted** | **n_steps** | **n_ingredients** | **user_id** | **recipe_id** | **date**   | **rating** | **avg_rating** |
 | ---------------------------------- | ------ | ----------- | ------------------ | ------------- | ----------- | ----------------- | ----------- | ------------- | ---------- | ---------- | -------------- |
@@ -156,7 +182,7 @@ We suspect that when people complete dishes that takes too many steps to make th
 We run the permutation test by shuffling the missingness of rating 1000 times. The distribution of test statistic and the observed statistic are shown below.
 
 <iframe
-    src = "assets/mar_n_steps.html",
+    src = "assets/mar_n_steps.html"
     width = "800"
     height = "600"
     frameborder = "0"
