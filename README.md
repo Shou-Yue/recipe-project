@@ -13,7 +13,7 @@ In this project, we examined the dataset from [food.com](food.com). The link to 
 1. `RAW_recipes.csv` contains all recipes
 2. `RAW_interactions.csv` contains all reviews and ratings submitted for recipes in `RAW_interactions.csv`
 
-The dataset contains meticulously designed recipes that are for all possiblescenarios, ranging across all cuisines and difficulty, and using all different kinds of ingredients. **Therefore, it comes to our interest to study the factors that determine rating of a recipe** and ultimately determine the preference of the general public.
+The dataset contains meticulously designed recipes that are for all possible scenarios, ranging across all cuisines and difficulty, and using all different kinds of ingredients. **Therefore, it comes to our interest to study the factors that determine rating of a recipe** and ultimately determine the preference of the general public.
 
 With all being said, we will first start by cleaning the dataset and conduct some exploratory analysis.
 
